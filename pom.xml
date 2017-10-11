@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eus.ixa</groupId>
+	<groupId>org.vicomtech</groupId>
 	<artifactId>ixa-pipe-nerc</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6.0</version>
+	<version>1.6.0-vicom</version>
 	<name>ixa-pipe-nerc</name>
-	<description>ixa pipes sequence labeler (ixa2.si.ehu.es/ixa-pipes).</description>
+	<description>A fork of the wonderful ixa pipes sequence labeler (ixa2.si.ehu.es/ixa-pipes). The reason for this fork is that we need to fiddle with some internals to cover some requirements.</description>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -14,13 +14,13 @@
 		</license>
 	</licenses>
 	<developers>
-		<developer>
+		<!-- <developer>
 			<id>ragerri</id>
 			<name>Rodrigo Agerri</name>
 			<email>rodrigo.agerri@ehu.eus</email>
 			<organization>IXA NLP Group</organization>
 			<organizationUrl>http://ixa.eus</organizationUrl>
-		</developer>
+		</developer> -->
 	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -186,7 +186,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	<organization>
+	<!-- <organization>
 		<url>http://ixa2.si.ehu.es/ixa-pipes</url>
 		<name>IXA pipes</name>
 	</organization>
@@ -194,5 +194,5 @@
 		<url>https://github.com/ixa-ehu/ixa-pipe-nerc</url>
 		<connection>scm:git:git@github.com:ixa-ehu/ixa-pipe-nerc.git</connection>
 		<developerConnection>scm:git:git@github.com:ixa-ehu/ixa-pipe-nerc.git</developerConnection>
-	</scm>
+	</scm> -->
 </project>
