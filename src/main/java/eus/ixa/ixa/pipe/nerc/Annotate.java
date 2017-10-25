@@ -207,12 +207,13 @@ public class Annotate {
 			List<Term>sentenceTerms=kaf.getTermsBySent(sent+1);
 			// process each sentence
 			String[] tokens = new String[sentence.size()];
+			String[] lemmas = new String[sentence.size()];
 			String[] tokenIds = new String[sentence.size()];
 			for (int i = 0; i < sentence.size(); i++) {
 				// @agarciap: change from forms to lemmas, is that better? or should both be
 				// combined?
-				// tokens[i] = sentence.get(i).getForm();
-				tokens[i] = sentenceTerms.get(i).getLemma();
+				tokens[i] = sentence.get(i).getForm();
+				lemmas[i] = sentenceTerms.get(i).getLemma();
 				tokenIds[i] = sentence.get(i).getId();
 			}
 			if (statistical) {
@@ -227,12 +228,12 @@ public class Annotate {
 			if (postProcess) {
 				// @agarciap: the Exact method is case sensitive, while the other is case
 				// insensitive
-				Span[] dictSpans = dictFinder.nercToSpans(tokens);// dictFinder.nercToSpansExact(tokens);
+				Span[] dictSpans = dictFinder.nercToSpans(lemmas);// dictFinder.nercToSpansExact(tokens);
 				SpanUtils.postProcessDuplicatedSpans(allSpans, dictSpans);
 				SpanUtils.concatenateSpans(allSpans, dictSpans);
 			}
 			if (dictTag) {
-				Span[] dictOnlySpans = dictFinder.nercToSpansExact(tokens);
+				Span[] dictOnlySpans = dictFinder.nercToSpansExact(lemmas);
 				allSpans = Lists.newArrayList(dictOnlySpans);
 			}
 			if (lexerFind) {
