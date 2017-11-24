@@ -64,9 +64,20 @@ public class Dictionaries {
    * @param inputDir
    *          the input directory
    */
+  //@agarciap changed to use the overload with the forceReload parameter
   public Dictionaries(final String inputDir) {
+	  this(inputDir, false);
+  }
+  
+  /**
+   * Construct the dictionaries from the input directory path.
+   * The flag forces reload even if a previous directory was already loaded
+   * @param inputDir
+   *          the input directory
+   */
+  public Dictionaries(final String inputDir,boolean forceReload) {
     if (dictNames == null && dictionaries == null
-        && dictionariesIgnoreCase == null) {
+        && dictionariesIgnoreCase == null || forceReload) {
       try {
         loadDictionaries(inputDir);
       } catch (IOException e) {

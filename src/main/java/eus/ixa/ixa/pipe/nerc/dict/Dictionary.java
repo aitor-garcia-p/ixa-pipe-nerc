@@ -120,7 +120,9 @@ public class Dictionary implements SerializableArtifact {
       gazEntry = null;
       int j;
       // iterate over tokens from the end
-      for (j = tokens.length - 1; j >= i; j--) {
+    //@agarciap, fix potential bottleneck
+      //  for (j = tokens.length - 1; j >= i; j--) {
+      for (j = Math.min(tokens.length-1, i+10); j >= i; j--) {
         // create span for search in dictionary Map; the first search takes as span
         // the whole sentence
         searchSpan = createSpan(tokens, i, j);
@@ -165,7 +167,9 @@ public class Dictionary implements SerializableArtifact {
       gazClass = null;
       int j;
       // iterate over tokens from the end
-      for (j = tokens.length - 1; j >= i; j--) {
+      //@agarciap, fix potential bottleneck
+      // for (j = tokens.length - 1; j >= i; j--) {
+      for (j = Math.min(tokens.length-1, i+10); j >= i; j--) {
         // create span for search in dictionary Map; the first search takes as span
         // the whole sentence
         searchSpan = createSpan(tokens, i, j);
