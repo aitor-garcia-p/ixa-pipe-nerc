@@ -44,8 +44,8 @@ public class CustomRegexpNameFinder {
 			loadCompiledRegexpsMap(lines);
 
 		} catch (Exception e) {
-			System.err.println("Error loading custom regular expression file at: " + pathToRegexpsFile);
-			e.printStackTrace();
+			System.err.println("Error ("+e.getClass()+":"+e.getMessage()+") loading custom regular expression file at: " + pathToRegexpsFile);
+			//e.printStackTrace();
 		}
 
 	}
