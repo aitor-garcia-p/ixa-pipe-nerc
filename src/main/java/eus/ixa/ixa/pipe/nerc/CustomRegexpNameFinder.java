@@ -1,7 +1,6 @@
 package eus.ixa.ixa.pipe.nerc;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class CustomRegexpNameFinder {
 			List<String> lines = FileUtils.readLines(new File(pathToRegexpsFile), StandardCharsets.UTF_8);
 			loadCompiledRegexpsMap(lines);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.err.println("Error loading custom regular expression file at: " + pathToRegexpsFile);
 			e.printStackTrace();
 		}
