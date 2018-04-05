@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.vicomtech</groupId>
@@ -14,13 +15,9 @@
 		</license>
 	</licenses>
 	<developers>
-		<!-- <developer>
-			<id>ragerri</id>
-			<name>Rodrigo Agerri</name>
-			<email>rodrigo.agerri@ehu.eus</email>
-			<organization>IXA NLP Group</organization>
-			<organizationUrl>http://ixa.eus</organizationUrl>
-		</developer> -->
+		<!-- <developer> <id>ragerri</id> <name>Rodrigo Agerri</name> <email>rodrigo.agerri@ehu.eus</email> 
+			<organization>IXA NLP Group</organization> <organizationUrl>http://ixa.eus</organizationUrl> 
+			</developer> -->
 	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,19 +28,27 @@
 	<url>http://ixa2.si.ehu.es/ixa-pipes</url>
 	<repositories>
 	</repositories>
-		<dependencies>
-		  <dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>4.11</version>
-		    <scope>test</scope>
-		    </dependency>
-		  <dependency>
-		    <groupId>eus.ixa</groupId>
-		    <artifactId>ixa-pipe-pos</artifactId>
-		    <version>1.4.6</version>
-		    <scope>compile</scope>
-		    </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eus.ixa</groupId>
+			<artifactId>ixa-pipe-pos</artifactId>
+			<version>1.4.6</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Added by @agarciap -->
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<distributionManagement>
@@ -186,13 +191,9 @@
 			</plugin>
 		</plugins>
 	</build>
-	<!-- <organization>
-		<url>http://ixa2.si.ehu.es/ixa-pipes</url>
-		<name>IXA pipes</name>
-	</organization>
-	<scm>
-		<url>https://github.com/ixa-ehu/ixa-pipe-nerc</url>
-		<connection>scm:git:git@github.com:ixa-ehu/ixa-pipe-nerc.git</connection>
-		<developerConnection>scm:git:git@github.com:ixa-ehu/ixa-pipe-nerc.git</developerConnection>
-	</scm> -->
+	<!-- <organization> <url>http://ixa2.si.ehu.es/ixa-pipes</url> <name>IXA 
+		pipes</name> </organization> <scm> <url>https://github.com/ixa-ehu/ixa-pipe-nerc</url> 
+		<connection>scm:git:git@github.com:ixa-ehu/ixa-pipe-nerc.git</connection> 
+		<developerConnection>scm:git:git@github.com:ixa-ehu/ixa-pipe-nerc.git</developerConnection> 
+		</scm> -->
 </project>

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 //import java.util.logging.Logger;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
@@ -46,6 +46,8 @@ import eus.ixa.ixa.pipe.nerc.train.Flags;
  * 
  * @author ragerri
  * @version 2015-02-25
+ * 
+ * Updated by @agarciap to add some extra stuff
  * 
  */
 public class Annotate {
@@ -70,6 +72,12 @@ public class Annotate {
 	 * The NameFinder Lexer for rule-based name finding.
 	 */
 	private NumericNameFinder numericLexerFinder;
+	
+	////////////////////////
+	// @agarciap: add the custom regexp name finder
+	private CustomRegexpNameFinder customRegexpNameFinder;	
+	///////////////////////
+	
 	/**
 	 * True if the name finder is statistical.
 	 */
@@ -114,6 +122,19 @@ public class Annotate {
 		this.clearFeatures = properties.getProperty("clearFeatures");
 		nameFactory = new NameFactory();
 		annotateOptions(properties);
+		////////////////////////////
+		// @agarciap: dummy (empty) initialisation here (overload Annotate constructor to add a proper init)
+		this.customRegexpNameFinder=new CustomRegexpNameFinder(Lists.newArrayList());
+	}
+	
+	public Annotate(final Properties properties, CustomRegexpNameFinder customRegexpNameFinder) throws IOException {
+
+		this.clearFeatures = properties.getProperty("clearFeatures");
+		nameFactory = new NameFactory();
+		annotateOptions(properties);
+		////////////////////////////
+		// @agarciap: dummy (empty) initialisation here (overload Annotate constructor to add a proper init)
+		this.customRegexpNameFinder=customRegexpNameFinder;
 	}
 
 	/**
@@ -222,8 +243,8 @@ public class Annotate {
 				}
 				Span[] statSpans = nameFinder.nercToSpans(tokens);
 				allSpans = Lists.newArrayList(statSpans);
-				System.err.println("Annotate -> Span probs: "
-						+ allSpans.stream().map(x -> x.getProb()).collect(Collectors.toList()));
+				//System.err.println("Annotate -> Span probs: "
+				//		+ allSpans.stream().map(x -> x.getProb()).collect(Collectors.toList()));
 			}
 			if (postProcess) {
 				// @agarciap: the Exact method is case sensitive, while the other is case
@@ -244,6 +265,16 @@ public class Annotate {
 				Span[] numericSpans = numericLexerFinder.nercToSpans(tokens);
 				SpanUtils.concatenateSpans(allSpans, numericSpans);
 			}
+			///////////////////////////////////
+			// @agarciap: add an additional post-process to use custom regular expressions
+			//System.out.println("ANNOTATE - This is being invoked");
+//			String testRegexp="[a-z]+@[a-z]+\\.com";
+//			this.customRegexpNameFinder=new CustomRegexpNameFinder(
+//					Lists.newArrayList(testRegexp+"\tTEST_REGEXP_EMAIL_ENTITY","aaa bbb ccc\tMULTITOKEN_REGEXP_TEST")
+//					);
+			Span[] regexpObtainedSpans = this.customRegexpNameFinder.nercToSpans(sentence);
+			SpanUtils.concatenateSpans(allSpans, regexpObtainedSpans);
+			//////////////////////////////////
 			Span[] allSpansArray = NameFinderME.dropOverlappingSpans(allSpans.toArray(new Span[allSpans.size()]));
 			List<Name> names = new ArrayList<Name>();
 			if (statistical) {
