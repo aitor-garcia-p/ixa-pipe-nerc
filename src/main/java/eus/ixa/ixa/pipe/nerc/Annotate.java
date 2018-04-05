@@ -164,7 +164,9 @@ public class Annotate {
 			}
 			if (!dictPath.equals(Flags.DEFAULT_DICT_PATH)) {
 				if (dictionaries == null) {
-					dictionaries = new Dictionaries(dictPath);
+					//force reload, to re-read the dictionaries in hot
+					boolean forceReload=true;
+					dictionaries = new Dictionaries(dictPath, forceReload);
 					dictFinder = new DictionariesNameFinder(dictionaries, nameFactory);
 				}
 				if (dictOption.equalsIgnoreCase("tag")) {
@@ -252,6 +254,10 @@ public class Annotate {
 				Span[] dictSpans = dictFinder.nercToSpans(lemmas);// dictFinder.nercToSpansExact(tokens);
 				SpanUtils.postProcessDuplicatedSpans(allSpans, dictSpans);
 				SpanUtils.concatenateSpans(allSpans, dictSpans);
+				//try also with forms, just in case
+				Span[] dictOnlySpansUsingForms = dictFinder.nercToSpansExact(tokens);
+				SpanUtils.postProcessDuplicatedSpans(allSpans, dictOnlySpansUsingForms);
+				SpanUtils.concatenateSpans(allSpans, dictOnlySpansUsingForms);
 			}
 			if (dictTag) {
 				Span[] dictOnlySpans = dictFinder.nercToSpansExact(lemmas);

@@ -76,8 +76,8 @@ public class Dictionaries {
    *          the input directory
    */
   public Dictionaries(final String inputDir,boolean forceReload) {
-    if (dictNames == null && dictionaries == null
-        && dictionariesIgnoreCase == null || forceReload) {
+    if ((dictNames == null && dictionaries == null
+        && dictionariesIgnoreCase == null) || forceReload) {
       try {
         loadDictionaries(inputDir);
       } catch (IOException e) {
