@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -44,7 +45,7 @@ public class Dictionaries {
   
   private static final Pattern tabPattern = Pattern.compile("\t");
 
-  public static boolean DEBUG = false;
+  public static boolean DEBUG = true;
   /**
    * The list of dictionary names.
    */
@@ -124,6 +125,9 @@ public class Dictionaries {
    */
   private void loadDictionaries(final String inputDir) throws IOException {
     List<File> fileList = StringUtils.getFilesInDir(new File(inputDir));
+    // @agarciap: Filtering out files with "regexp" in the name
+    fileList=fileList.stream().filter(x->!x.getName().contains("regexp")).collect(Collectors.toList());
+    ////////////////////////////////////////////////
     dictNames = new ArrayList<>(fileList.size());
     dictionaries = new ArrayList<>(fileList.size());
     dictionariesIgnoreCase = new ArrayList<>(fileList.size());

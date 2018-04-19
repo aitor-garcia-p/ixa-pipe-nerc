@@ -39,12 +39,14 @@ public class CustomRegexpNameFinder {
 	public CustomRegexpNameFinder(String pathToRegexpsFile) {
 		super();
 		this.compiledRegexps = Maps.newHashMap();
+		File regexpsFile=new File(pathToRegexpsFile);
 		try {
-			List<String> lines = FileUtils.readLines(new File(pathToRegexpsFile), StandardCharsets.UTF_8);
+			List<String> lines = FileUtils.readLines(regexpsFile, StandardCharsets.UTF_8);
 			loadCompiledRegexpsMap(lines);
 
 		} catch (Exception e) {
-			System.err.println("Error ("+e.getClass()+":"+e.getMessage()+") loading custom regular expression file at: " + pathToRegexpsFile);
+			System.err.println("Error loading custom regular expression file at: " + regexpsFile.getAbsolutePath());
+			System.err.println(e.getClass()+":"+e.getMessage());
 			//e.printStackTrace();
 		}
 
@@ -58,6 +60,10 @@ public class CustomRegexpNameFinder {
 	
 	private void loadCompiledRegexpsMap(List<String>tabSeparatedRagexpsAndEntityTypes) {
 		for (String line : tabSeparatedRagexpsAndEntityTypes) {
+			if(line.trim().isEmpty()) {
+				//skip empty lines
+				continue;
+			}
 			try {
 				// line format: regexp TAB entity_type
 				String[] regexpAndType = line.split("\t");
