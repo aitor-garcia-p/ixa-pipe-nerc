@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+//import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
@@ -84,10 +85,15 @@ public class CustomRegexpNameFinder {
 		for(Entry<Pattern,String> entry:compiledRegexps.entrySet()) {
 			Matcher m=entry.getKey().matcher(rebuiltText);
 			while(m.find()) {
+				System.err.println("NE from regex: "+m.group(0));
 				int start = m.start();
 				int end=m.end();
-				Span span=buildSpan(start, end, kafTokens, entry.getValue());
-				spans.add(span);
+				try {
+					Span span=buildSpan(start, end, kafTokens, entry.getValue());
+					spans.add(span);
+				}catch(Exception e) {
+					System.err.println("A regexp NERC was not added to spans due to some reason: "+e.getMessage());
+				}
 			}
 		}		
 		return spans.toArray(new Span[spans.size()]);
@@ -122,7 +128,7 @@ public class CustomRegexpNameFinder {
 	 * @param kafTokens
 	 * @return
 	 */
-	protected static Span buildSpan(int chStart, int chEnd, List<WF>kafTokens, String entityTpe) {
+	protected static Span buildSpan(int chStart, int chEnd, List<WF>kafTokens, String entityTpe){
 		int startToken=-1;
 		int endToken=-1;
 		for(int tokenIndex=0;tokenIndex<kafTokens.size();tokenIndex++) {
@@ -134,6 +140,9 @@ public class CustomRegexpNameFinder {
 				endToken=tokenIndex;
 			}
 		}
+		//System.err.println("chStart:"+chStart);
+		//System.err.println("chEnd:"+chEnd);
+		//System.err.println(kafTokens.stream().map(x->x.getForm()+"/"+x.getOffset()).collect(Collectors.toList()));
 		//System.out.println("SPAN: "+startToken+" , "+endToken);
 		//add a +1 to the endToken number, later a copyRange will we done
 		Span span=new Span(startToken, endToken+1, entityTpe);
