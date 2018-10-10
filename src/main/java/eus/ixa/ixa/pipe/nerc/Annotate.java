@@ -47,7 +47,7 @@ import eus.ixa.ixa.pipe.nerc.train.Flags;
  * @author ragerri
  * @version 2015-02-25
  * 
- * Updated by @agarciap to add some extra stuff
+ *          Updated by @agarciap to add some extra stuff
  * 
  */
 public class Annotate {
@@ -72,12 +72,12 @@ public class Annotate {
 	 * The NameFinder Lexer for rule-based name finding.
 	 */
 	private NumericNameFinder numericLexerFinder;
-	
+
 	////////////////////////
 	// @agarciap: add the custom regexp name finder
-	private CustomRegexpNameFinder customRegexpNameFinder;	
+	private CustomRegexpNameFinder customRegexpNameFinder;
 	///////////////////////
-	
+
 	/**
 	 * True if the name finder is statistical.
 	 */
@@ -123,18 +123,20 @@ public class Annotate {
 		nameFactory = new NameFactory();
 		annotateOptions(properties);
 		////////////////////////////
-		// @agarciap: dummy (empty) initialisation here (overload Annotate constructor to add a proper init)
-		this.customRegexpNameFinder=new CustomRegexpNameFinder(Lists.newArrayList());
+		// @agarciap: dummy (empty) initialisation here (overload Annotate constructor
+		//////////////////////////// to add a proper init)
+		this.customRegexpNameFinder = new CustomRegexpNameFinder(Lists.newArrayList());
 	}
-	
+
 	public Annotate(final Properties properties, CustomRegexpNameFinder customRegexpNameFinder) throws IOException {
 
 		this.clearFeatures = properties.getProperty("clearFeatures");
 		nameFactory = new NameFactory();
 		annotateOptions(properties);
 		////////////////////////////
-		// @agarciap: dummy (empty) initialisation here (overload Annotate constructor to add a proper init)
-		this.customRegexpNameFinder=customRegexpNameFinder;
+		// @agarciap: dummy (empty) initialisation here (overload Annotate constructor
+		//////////////////////////// to add a proper init)
+		this.customRegexpNameFinder = customRegexpNameFinder;
 	}
 
 	/**
@@ -164,8 +166,8 @@ public class Annotate {
 			}
 			if (!dictPath.equals(Flags.DEFAULT_DICT_PATH)) {
 				if (dictionaries == null) {
-					//force reload, to re-read the dictionaries in hot
-					boolean forceReload=true;
+					// force reload, to re-read the dictionaries in hot
+					boolean forceReload = true;
 					dictionaries = new Dictionaries(dictPath, forceReload);
 					dictFinder = new DictionariesNameFinder(dictionaries, nameFactory);
 				}
@@ -225,9 +227,26 @@ public class Annotate {
 
 		List<Span> allSpans = null;
 		List<List<WF>> sentences = kaf.getSentences();
-		for (int sent=0;sent<sentences.size();sent++) {
-			List<WF> sentence=sentences.get(sent);
-			List<Term>sentenceTerms=kaf.getTermsBySent(sent+1);
+		// System.err.println("(Annotate) NUM SENTENCES: "+sentences.size());
+		for (int sent = 0; sent < sentences.size(); sent++) {
+			List<WF> sentence = sentences.get(sent);
+			List<Term> sentenceTerms = kaf.getTermsBySent(sent + 1);
+
+			// DEBUG weird [bug?] in which sentence terms are empty...
+			if (sentence.size() != sentenceTerms.size()) {
+				System.err.println("WARNING: sentence WF not equal size than sentenceTerms???");
+//				System.err.println("Sentence WFs: (size:"+sentence.size()+")");
+//				sentence.forEach(x -> System.out.print(x.getForm() + ' '));
+//				System.err.println();
+//				System.err.println("Sentence terms: (size:"+sentenceTerms.size()+")");
+//				sentenceTerms.forEach(x -> System.out.print(x.getForm() + ' '));
+//				System.err.println();
+				System.err.println("Some weird happened with this sentence, skipping and continuing...");
+				continue;
+			}
+
+			//
+
 			// process each sentence
 			String[] tokens = new String[sentence.size()];
 			String[] lemmas = new String[sentence.size()];
@@ -245,8 +264,8 @@ public class Annotate {
 				}
 				Span[] statSpans = nameFinder.nercToSpans(tokens);
 				allSpans = Lists.newArrayList(statSpans);
-				//System.err.println("Annotate -> Span probs: "
-				//		+ allSpans.stream().map(x -> x.getProb()).collect(Collectors.toList()));
+				// System.err.println("Annotate -> Span probs: "
+				// + allSpans.stream().map(x -> x.getProb()).collect(Collectors.toList()));
 			}
 			if (postProcess) {
 				// @agarciap: the Exact method is case sensitive, while the other is case
@@ -254,7 +273,7 @@ public class Annotate {
 				Span[] dictSpans = dictFinder.nercToSpans(lemmas);// dictFinder.nercToSpansExact(tokens);
 				SpanUtils.postProcessDuplicatedSpans(allSpans, dictSpans);
 				SpanUtils.concatenateSpans(allSpans, dictSpans);
-				//try also with forms, just in case
+				// try also with forms, just in case
 				Span[] dictOnlySpansUsingForms = dictFinder.nercToSpansExact(tokens);
 				SpanUtils.postProcessDuplicatedSpans(allSpans, dictOnlySpansUsingForms);
 				SpanUtils.concatenateSpans(allSpans, dictOnlySpansUsingForms);
@@ -273,11 +292,12 @@ public class Annotate {
 			}
 			///////////////////////////////////
 			// @agarciap: add an additional post-process to use custom regular expressions
-			//System.out.println("ANNOTATE - This is being invoked");
-//			String testRegexp="[a-z]+@[a-z]+\\.com";
-//			this.customRegexpNameFinder=new CustomRegexpNameFinder(
-//					Lists.newArrayList(testRegexp+"\tTEST_REGEXP_EMAIL_ENTITY","aaa bbb ccc\tMULTITOKEN_REGEXP_TEST")
-//					);
+			// System.out.println("ANNOTATE - This is being invoked");
+			// String testRegexp="[a-z]+@[a-z]+\\.com";
+			// this.customRegexpNameFinder=new CustomRegexpNameFinder(
+			// Lists.newArrayList(testRegexp+"\tTEST_REGEXP_EMAIL_ENTITY","aaa bbb
+			// ccc\tMULTITOKEN_REGEXP_TEST")
+			// );
 			Span[] regexpObtainedSpans = this.customRegexpNameFinder.nercToSpans(sentence);
 			SpanUtils.concatenateSpans(allSpans, regexpObtainedSpans);
 			//////////////////////////////////
